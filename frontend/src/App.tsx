@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { ImageUploader } from './components/ImageUploader';
+import { StoryViewer } from './components/StoryViewer';
+
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
 
 function App() {
+  const [generatedStory, setGeneratedStory] = useState<string>('');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="lg">
+        <ImageUploader onStoryGenerated={setGeneratedStory} />
+        <StoryViewer story={generatedStory} />
+      </Container>
+    </ThemeProvider>
   );
 }
 

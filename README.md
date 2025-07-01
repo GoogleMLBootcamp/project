@@ -1,68 +1,103 @@
-# project
-파이팅~!~!~!~!~!
+# GoogleML Project
 
-# Photo Story Generator
+AI-powered story generation and image creation project using OpenAI and other models.
 
-사진들로부터 자동으로 일기를 생성하는 AI 기반 서비스입니다.
+## Project Structure
 
-## 프로젝트 구조
 ```
-project/
-├── frontend/                  # React 프론트엔드
-│   ├── src/                  
-│   │   ├── components/       # 재사용 가능한 UI 컴포넌트
-│   │   ├── pages/           # 페이지 컴포넌트
-│   │   ├── hooks/           # 커스텀 훅
-│   │   ├── services/        # API 통신 관련 서비스
-│   │   └── styles/          # 스타일 파일들
-│   └── public/              # 정적 파일
-│
-├── backend/                  # FastAPI 백엔드
+GoogleML/
+├── backend/                 # FastAPI Backend
 │   ├── app/
-│   │   ├── api/            # API 라우트
-│   │   ├── core/           # 설정 및 공통 유틸리티
-│   │   ├── db/             # MongoDB 연결 및 모델
-│   │   └── services/       # 비즈니스 로직
-│   └── requirements.txt    # Python 패키지 의존성
+│   │   ├── api/            # API endpoints
+│   │   │   └── v1/         # API version 1
+│   │   ├── core/           # Core configurations
+│   │   ├── db/             # Database connections
+│   │   ├── models/         # Data models
+│   │   ├── services/       # Business logic
+│   │   └── utils/          # Utility functions
+│   ├── images/             # Generated images storage
+│   ├── requirements.txt    # Python dependencies
+│   └── run.sh             # Backend startup script
 │
-├── ml/                      # 머신러닝 관련 코드
-│   ├── training/           # 모델 학습 코드
-│   │   ├── datasets/      # 데이터셋 처리
-│   │   └── models/        # PaLI-Gemma 모델 구현
-│   ├── inference/         # 모델 추론 코드
-│   │   └── models/       # 학습된 모델 추론
-│   └── data/             # 데이터셋 저장
+├── frontend/               # React Frontend
+│   ├── public/            # Static files
+│   ├── src/               # Source code
+│   ├── package.json       # Node dependencies
+│   └── tsconfig.json      # TypeScript configuration
 │
-└── docs/                   # 문서
-    ├── api/               # API 문서
-    └── setup/            # 설치 및 설정 가이드
+└── ml/                    # Machine Learning
+    ├── data/              # Dataset storage
+    ├── inference/         # Model inference
+    └── training/          # Model training
 ```
 
-## 주요 컴포넌트 설명
+## Prerequisites
 
-### Frontend
-- React와 TypeScript 기반의 SPA
-- 이미지 업로드 및 미리보기 기능
-- 생성된 스토리 표시 및 편집 기능
-- 사용자 히스토리 관리
+- Python 3.8+
+- Node.js 16+
+- MongoDB
+- OpenAI API Key
 
-### Backend
-- FastAPI 기반의 RESTful API
-- MongoDB를 사용한 데이터 저장
-  - 사용자 업로드 이미지
-  - 생성된 스토리
-  - 사용자 히스토리
-- 이미지 처리 및 ML 모델 연동
-- OpenAI API 통합
+## Setup Instructions
 
-### ML
-- PaLI-Gemma 모델 구현 및 학습
-- 이미지 전처리 파이프라인
-- 모델 추론 및 텍스트 생성
-- 모델 성능 평가 및 개선
+### Backend Setup
 
-### Database (MongoDB)
-- 이미지 메타데이터 저장
-- 생성된 스토리 저장
-- 사용자 데이터 관리
-- 히스토리 추적
+1. Create and activate virtual environment:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Create `.env` file in backend directory:
+```env
+MONGODB_URL=mongodb://localhost:27017
+OPENAI_API_KEY=your_api_key_here
+```
+
+4. Run the backend:
+```bash
+./run.sh  # On Windows: run.sh
+# Or alternatively:
+uvicorn app.main:app --reload
+```
+
+### Frontend Setup
+
+1. Install dependencies:
+```bash
+cd frontend
+npm install
+```
+
+2. Create `.env` file in frontend directory:
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
+
+3. Run the frontend:
+```bash
+npm start
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+
+## API Documentation
+
+The API documentation is available at `/docs` endpoint when the backend server is running. It provides detailed information about all available endpoints and their usage.
+
+## Features
+
+- Story Generation using OpenAI GPT models
+- Image Generation for stories
+- Story and Image Management
+- Interactive User Interface
+
