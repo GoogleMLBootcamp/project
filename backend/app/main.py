@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api.v1 import openai
+from .api.v1.router import router
 from .db.mongodb import db
 
 app = FastAPI(
@@ -27,4 +27,5 @@ async def startup_event():
 async def shutdown_event():
     db.close_mongo_connection()
 
-app.include_router(openai.router, prefix="/api/openai", tags=["openai"]) 
+# Include all routes
+app.include_router(router) 

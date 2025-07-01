@@ -4,16 +4,17 @@ from pydantic import BaseModel
 from ...services.openai_service import OpenAIService
 from ...models.story import Story
 
-router = APIRouter()
 # Initialize the OpenAIService
 openai_service = OpenAIService()
 
+# Create router for OpenAI endpoints
+openai_router = APIRouter()
 
-@router.post(
-        "/generate-story",
-        summary="Generate a story from image descriptions using OpenAI GPT",
-        tags=["openai"],
-        response_model=Story,
+@openai_router.post(
+    "/generate-story",
+    summary="Generate a story from image descriptions using OpenAI GPT",
+    tags=["openai"],
+    response_model=Story,
 )
 async def generate_story(imageDescriptions: str):
     storyPrompts = openai_service.generate_prompt_for_story(imageDescriptions)
