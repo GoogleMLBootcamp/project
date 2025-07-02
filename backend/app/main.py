@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .api.v1.router import router
+from .api.v2.router import v2_router
 from .db.mongodb import db
 
 app = FastAPI(
@@ -29,3 +30,4 @@ async def shutdown_event():
 
 # Include all routes
 app.include_router(router) 
+app.include_router(v2_router)
