@@ -6,3 +6,8 @@ from .image import Image
 
 class Story(BaseModel):
     story: str
+
+class StoryCreate(BaseModel):
+    story_id: str
+    image_urls: List[str]
+    story_text: str

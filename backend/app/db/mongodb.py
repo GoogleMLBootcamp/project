@@ -2,10 +2,12 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from ..core.config import MONGODB_URL, DB_NAME
 
 class Database:
-    client: AsyncIOMotorClient = None
-    db = None
 
-    def connect_to_mongo(self):
+    def __init__(self):
+        self.client = AsyncIOMotorClient(MONGODB_URL)
+        self.db = self.client[DB_NAME]
+
+    async def connect_to_mongo(self):
         """Connect to MongoDB"""
         self.client = AsyncIOMotorClient(MONGODB_URL)
         self.db = self.client[DB_NAME]
