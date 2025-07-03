@@ -21,3 +21,13 @@ async def generate_story(imageDescriptions: str = Body(...)):
     story = openai_service.generate_story(storyPrompts)
     return {"story": story}
 
+@openai_router.post(
+    "/generate-story-title",
+    summary="Generate a story title from story content using OpenAI GPT",
+    tags=["openai"],
+    response_model=str,
+)
+async def generate_story_title(storyContent: str = Body(...)):
+    storyTitlePrompts = openai_service.generate_prompt_for_story_title(storyContent)
+    storyTitle = openai_service.generate_story(storyTitlePrompts)
+    return storyTitle

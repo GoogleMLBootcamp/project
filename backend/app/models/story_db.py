@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 class StoryDB(BaseModel):
     story_id: str = Field(alias="_id")  # MongoDB의 _id를 story_id로 접근
+    story_title: str
     image_urls: List[str]
     story_text: str
     created_at: datetime

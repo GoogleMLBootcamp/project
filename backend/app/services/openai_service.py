@@ -38,7 +38,22 @@ class OpenAIService:
             "system": SYSTEM_PROMPT,
             "user": USER_PROMPT
         }
+    
+    def generate_prompt_for_story_title(self, story_content: str) -> Dict[str, str]:
+        """
+        Generate prompts for story title generation
+        """
+        SYSTEM_PROMPT = self._load_prompt("story_title.txt").strip()
+        USER_PROMPT = f"""
+        Please generate a title for the following story:
+        {story_content}
+        """.strip()
         
+        return {
+            "system": SYSTEM_PROMPT,
+            "user": USER_PROMPT
+        }
+    
     def generate_story(
             self,
             prompts: Dict[str, str],

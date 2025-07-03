@@ -9,7 +9,7 @@ class StoryService:
         db = get_database()
         self.collection = db.stories
 
-    async def post_story(self, story_id: str, image_urls: List[str], story_text: str) -> StoryDB:
+    async def post_story(self, story_id: str, story_title: str, image_urls: List[str], story_text: str) -> StoryDB:
         """
         Create a new story in the database
         """
@@ -18,6 +18,7 @@ class StoryService:
             
             story = StoryDB(
                 story_id=story_id,
+                story_title=story_title,
                 image_urls=image_urls,
                 story_text=story_text,
                 created_at=now,
@@ -63,12 +64,11 @@ class StoryService:
     async def update_story(self, story_id: str, story_text: str) -> Optional[StoryDB]:
         """
         Update a story's text
-        안쓸수도 있음
         """
         try:
             update_data = {
                 "$set": {
-                    "story": story_text,
+                    "story_text": story_text,
                     "updated_at": datetime.now(timezone.utc)
                 }
             }
@@ -81,7 +81,29 @@ class StoryService:
             return None
         except Exception as e:
             logger.error(f"Error updating story {story_id}: {str(e)}")
-            raise
+            raise e
+        
+    async def update_story_title(self, story_id: str, story_title: str) -> Optional[StoryDB]:
+        """
+        Update a story's title
+        """
+        try:
+            update_data = {
+                "$set": {
+                    "story_title": story_title,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+            result = await self.collection.update_one(
+                {"_id": story_id},
+                update_data
+            )
+            if result.modified_count:
+                return await self.get_story(story_id)
+            return None
+        except Exception as e:
+            logger.error(f"Error updating story title {story_id}: {str(e)}")
+            raise e
 
     async def delete_story(self, story_id: str) -> bool:
         """
@@ -92,4 +114,16 @@ class StoryService:
             return result.deleted_count > 0
         except Exception as e:
             logger.error(f"Error deleting story {story_id}: {str(e)}")
-            raise
+            raise e
+        
+    async def delete_all_stories(self) -> bool:
+        """
+        Delete all stories
+        """
+        try:
+            result = await self.collection.delete_many({})
+            return result.deleted_count > 0
+        except Exception as e:
+            logger.error(f"Error deleting all stories: {str(e)}")
+            raise e
+            

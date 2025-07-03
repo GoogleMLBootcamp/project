@@ -17,6 +17,7 @@ story_service = StoryService()
 async def create_story(story_data: StoryCreate):
     try:
         story = await story_service.post_story(
+            story_title=story_data.story_title,
             story_id=story_data.story_id,
             image_urls=story_data.image_urls,
             story_text=story_data.story_text
@@ -24,6 +25,28 @@ async def create_story(story_data: StoryCreate):
         return story
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@story_router.put(
+    "/{story_id}",
+    summary="Update a story",
+    tags=["stories"]
+)
+async def update_story(story_id: str, story_text: str):
+    story = await story_service.update_story(story_id, story_text)
+    if not story:
+        raise HTTPException(status_code=404, detail="Story not found")
+    return story
+
+@story_router.put(
+    "/{story_id}/title",
+    summary="Update a story's title",
+    tags=["stories"]
+)
+async def update_story_title(story_id: str, story_title: str):
+    story = await story_service.update_story_title(story_id, story_title)
+    if not story:
+        raise HTTPException(status_code=404, detail="Story not found")
+    return story
 
 @story_router.get(
     "/{story_id}",
@@ -61,5 +84,16 @@ async def delete_story(story_id: str):
         return {"message": "Story deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
+    
+@story_router.delete(
+    "/",
+    summary="Delete all stories",
+    tags=["stories"]
+)
+async def delete_all_stories():
+    try:
+        success = await story_service.delete_all_stories()
+        return {"message": "All stories deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
