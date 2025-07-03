@@ -1,162 +1,179 @@
-# Images API Documentation
+# Images API Documentation (v2)
+
+## Base URL
+```
+/api/v2/images
+```
 
 ## Endpoints
 
-### 1. Get All Images
-Get all stored images across all stories.
+### 1. Upload Images
+Upload multiple images using Cloudinary service.
 
-**Endpoint:** `GET /api/v1/images`
+**Method**: POST  
+**Endpoint**: `/upload`  
+**Tags**: images-v2
 
-**Response:**
-```json
-[
-  {
-    "id": "1",
-    "story_id": "2acfa514-2915-4a9d-8a3a-338d52bd0d9e",
-    "path": "/images/stories/2acfa514-2915-4a9d-8a3a-338d52bd0d9e/1.jpg",
-    "created_at": "2024-03-20T10:30:00Z"
-  },
-  // ... more images
-]
-```
+#### Request
+- Content-Type: multipart/form-data
+- Body: Array of image files
 
-### 2. Get All Story IDs
-Get all available story IDs.
-
-**Endpoint:** `GET /api/v1/images/story-ids`
-
-**Response:**
-```json
-[
-  "2acfa514-2915-4a9d-8a3a-338d52bd0d9e",
-  "43bb34f1-30de-4647-bdf3-befc687fee33",
-  // ... more story IDs
-]
-```
-
-### 3. Get Images by Story ID
-Get all images for a specific story.
-
-**Endpoint:** `GET /api/v1/images/{story_id}`
-
-**Response:**
-```json
-[
-  {
-    "id": "1",
-    "story_id": "2acfa514-2915-4a9d-8a3a-338d52bd0d9e",
-    "path": "/images/stories/2acfa514-2915-4a9d-8a3a-338d52bd0d9e/1.jpg",
-    "created_at": "2024-03-20T10:30:00Z"
-  },
-  // ... more images from the story
-]
-```
-
-### 4. Upload Images
-Upload multiple images using form-data.
-
-**Endpoint:** `POST /api/v1/images/upload`
-
-**Request:**
-```http
-POST /api/v1/images/upload
-Content-Type: multipart/form-data
-
-files: [image1.jpg, image2.jpg, ...]
-```
-
-**Response:**
+#### Response
 ```json
 {
-  "story_id": "2acfa514-2915-4a9d-8a3a-338d52bd0d9e",
-  "image_paths": [
-    "/images/stories/2acfa514-2915-4a9d-8a3a-338d52bd0d9e/1.jpg",
-    "/images/stories/2acfa514-2915-4a9d-8a3a-338d52bd0d9e/2.jpg"
+  "story_id": "123e4567-e89b-12d3-a456-426614174000",
+  "image_urls": [
+    "https://cloudinary.com/v1/stories/123e4567/image1.jpg",
+    "https://cloudinary.com/v1/stories/123e4567/image2.jpg"
   ],
   "image_count": 2
 }
 ```
 
+#### Example
+```bash
+curl -X POST "http://localhost:8000/api/v2/images/upload" \
+  -H "Content-Type: multipart/form-data" \
+  -F "files=@image1.jpg" \
+  -F "files=@image2.jpg"
+```
+
+### 2. Get Story Images
+Retrieve all images for a specific story.
+
+**Method**: GET  
+**Endpoint**: `/{story_id}`  
+**Tags**: images-v2
+
+#### Parameters
+- `story_id` (path parameter, required): The unique identifier of the story
+
+#### Response
+```json
+[
+  {
+    "url": "https://cloudinary.com/v1/stories/123e4567/image1.jpg",
+    "story_id": "123e4567-e89b-12d3-a456-426614174000",
+    "image_number": 1,
+    "created_at": "2024-03-21T10:30:00Z"
+  },
+  {
+    "url": "https://cloudinary.com/v1/stories/123e4567/image2.jpg",
+    "story_id": "123e4567-e89b-12d3-a456-426614174000",
+    "image_number": 2,
+    "created_at": "2024-03-21T10:30:00Z"
+  }
+]
+```
+
+#### Example
+```bash
+curl "http://localhost:8000/api/v2/images/123e4567-e89b-12d3-a456-426614174000"
+```
+
+### 3. Get All Images
+Retrieve all images across all stories.
+
+**Method**: GET  
+**Endpoint**: `/`  
+**Tags**: images-v2
+
+#### Response
+```json
+[
+  {
+    "url": "https://cloudinary.com/v1/stories/123e4567/image1.jpg",
+    "story_id": "123e4567-e89b-12d3-a456-426614174000",
+    "image_number": 1,
+    "created_at": "2024-03-21T10:30:00Z"
+  },
+  {
+    "url": "https://cloudinary.com/v1/stories/987fcdeb/image1.jpg",
+    "story_id": "987fcdeb-a654-12d3-a456-426614174000",
+    "image_number": 1,
+    "created_at": "2024-03-21T11:30:00Z"
+  }
+]
+```
+
+#### Example
+```bash
+curl "http://localhost:8000/api/v2/images"
+```
+
+### 4. Get Story IDs
+Retrieve all story IDs that have images.
+
+**Method**: GET  
+**Endpoint**: `/story-ids`  
+**Tags**: images-v2
+
+#### Response
+```json
+[
+  "123e4567-e89b-12d3-a456-426614174000",
+  "987fcdeb-a654-12d3-a456-426614174000"
+]
+```
+
+#### Example
+```bash
+curl "http://localhost:8000/api/v2/images/story-ids"
+```
+
 ### 5. Delete Story Images
-Delete all images for a specific story.
+Delete all images for a specific story from Cloudinary.
 
-**Endpoint:** `DELETE /api/v1/images/{story_id}`
+**Method**: DELETE  
+**Endpoint**: `/{story_id}`  
+**Tags**: images-v2
 
-**Response:**
+#### Parameters
+- `story_id` (path parameter, required): The unique identifier of the story
+
+#### Response
 ```json
 {
-  "success": true,
-  "message": "Images deleted successfully"
+  "message": "Successfully deleted all images for story 123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
+#### Example
+```bash
+curl -X DELETE "http://localhost:8000/api/v2/images/123e4567-e89b-12d3-a456-426614174000"
+```
+
 ### 6. Delete All Images
-Delete all story images from the system.
+Delete all images from Cloudinary.
 
-**Endpoint:** `DELETE /api/v1/images`
+**Method**: DELETE  
+**Endpoint**: `/`  
+**Tags**: images-v2
 
-**Response:**
+#### Response
 ```json
 {
-  "success": true,
-  "message": "All images deleted successfully"
+  "message": "Successfully deleted all images"
 }
+```
+
+#### Example
+```bash
+curl -X DELETE "http://localhost:8000/api/v2/images"
 ```
 
 ## Error Responses
 
+### 400 Bad Request
 ```json
 {
-  "detail": "Error message here"
+  "detail": "No files provided"
 }
 ```
 
-Common error cases:
-- 404: Story or images not found
-- 400: Invalid request (e.g., no files provided)
-- 500: Server error during file processing
-
-## Usage Examples
-
-### Python
-```python
-import requests
-
-# Get all images
-response = requests.get('http://localhost:8000/api/v1/images')
-all_images = response.json()
-
-# Upload images
-files = [
-    ('files', ('image1.jpg', open('image1.jpg', 'rb'), 'image/jpeg')),
-    ('files', ('image2.jpg', open('image2.jpg', 'rb'), 'image/jpeg'))
-]
-response = requests.post('http://localhost:8000/api/v1/images/upload', files=files)
-upload_result = response.json()
-
-# Get images for a story
-story_id = upload_result['story_id']
-response = requests.get(f'http://localhost:8000/api/v1/images/{story_id}')
-story_images = response.json()
-```
-
-### JavaScript
-```javascript
-// Get all images
-const images = await fetch('http://localhost:8000/api/v1/images').then(r => r.json());
-
-// Upload images
-const formData = new FormData();
-formData.append('files', imageFile1);
-formData.append('files', imageFile2);
-
-const uploadResponse = await fetch('http://localhost:8000/api/v1/images/upload', {
-  method: 'POST',
-  body: formData
-});
-const uploadResult = await uploadResponse.json();
-
-// Get images for a story
-const storyId = uploadResult.story_id;
-const storyImages = await fetch(`http://localhost:8000/api/v1/images/${storyId}`).then(r => r.json());
+### 500 Internal Server Error
+```json
+{
+  "detail": "Failed to upload image to Cloudinary"
+}
 ``` 
