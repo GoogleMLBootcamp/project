@@ -14,10 +14,10 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({ story }) => {
         <Typography variant="h5" gutterBottom>
           Generated Story
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
           {story}
         </Typography>
       </Paper>
     </Box>
   );
-}; 
+};

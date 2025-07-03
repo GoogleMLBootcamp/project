@@ -23,12 +23,8 @@ export const api = {
     files.forEach(file => {
       formData.append('files', file);
     });
-    
-    const response = await axios.post(`${API_URL}/api/v1/images/upload`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+
+    const response = await axios.post(`${API_URL}/api/v1/images/upload`, formData);
     return response.data;
   },
 
@@ -70,5 +66,16 @@ export const api = {
       console.error('Error generating story:', error);
       throw error;
     }
+  },
+
+  // New: Save generated story
+  saveStoryText: async (storyId: string, story: string): Promise<void> => {
+    await axios.post(`${API_URL}/api/v1/story/${storyId}`, { story });
+  },
+
+  // New: Load saved story
+  getStoryText: async (storyId: string): Promise<string> => {
+    const response = await axios.get(`${API_URL}/api/v1/story/${storyId}`);
+    return response.data.story;
   }
-}; 
+};
