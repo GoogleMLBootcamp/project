@@ -1,26 +1,19 @@
-import React, { useState } from 'react';
-import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { ImageUploader } from './components/ImageUploader';
-import { StoryViewer } from './components/StoryViewer';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { CssBaseline } from '@mui/material';
+import { AlbumProvider } from './albumStore';
+import Dashboard from './Dashboard';
 
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-});
-
-function App() {
-  const [generatedStory, setGeneratedStory] = useState<string>('');
-
+export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container maxWidth="lg">
-        <ImageUploader onStoryGenerated={setGeneratedStory} />
-        <StoryViewer story={generatedStory} />
-      </Container>
-    </ThemeProvider>
+    <BrowserRouter>
+      <AlbumProvider>
+        <CssBaseline />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </AlbumProvider>
+    </BrowserRouter>
   );
 }
-
-export default App;
