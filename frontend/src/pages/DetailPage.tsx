@@ -5,6 +5,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAlbums } from '../albumStore';
 
+//다이얼로그
+//상세 페이지 (스토리 상세 / 이미지 상세)
+
 export default function DetailPage() {
   const { id } = useParams<{ id: string }>();
   const { albums } = useAlbums();

@@ -1,54 +1,51 @@
-/* src/components/ImageUploader.tsx */
-import React, { useState, ChangeEvent } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import React, { useRef } from 'react';
+import { Box, Button, LinearProgress } from '@mui/material';
+import { api } from '../api';
 
-const ImageUploader: React.FC = () => {
-  const [preview, setPreview] = useState<string | null>(null);
+interface Props {
+  onUploadComplete: (payload: {
+    storyId: string;
+    imageUrls: string[];
+    combinedCaption: string;
+  }) => void;
+}
 
-  /** 파일 input onChange */
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+const ImageUploader: React.FC<Props> = ({ onUploadComplete }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = React.useState(false);
 
-    /* ① 브라우저 Ram 에 URL 객체 생성 → state 에 저장 */
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-
-    /* ② 필요하다면 FormData 로 백엔드 전송
-    const form = new FormData();
-    form.append('file', file);
-    await axios.post('/api/upload', form);
-    */
+  const handleUpload = async (files: File[]) => {
+    setLoading(true);
+    try {
+      const { story_id, image_urls } = await api.uploadImages(files);
+      const captions = await Promise.all(
+        image_urls.map((url: string) => api.analyzeImageWithBLIP(url))
+      );
+      const combinedCaption = captions.join(' ');
+      onUploadComplete({ storyId: story_id, imageUrls: image_urls, combinedCaption });
+    } catch (err) {
+      console.error('업로드 실패:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Box textAlign="center" mt={4}>
-      {/* --- 파일 선택 버튼 --- */}
       <input
-        accept="image/*"
-        id="img-input"
+        ref={inputRef}
         type="file"
+        accept="image/*"
+        multiple
         hidden
-        onChange={handleChange}
+        onChange={(e) => {
+          if (e.target.files) handleUpload(Array.from(e.target.files));
+        }}
       />
-      <label htmlFor="img-input">
-        <Button variant="contained" component="span">
-          이미지 업로드
-        </Button>
-      </label>
-
-      {/* --- 미리 보기 --- */}
-      {preview && (
-        <>
-          <Typography mt={2}>미리 보기</Typography>
-          <Box
-            component="img"
-            src={preview}
-            alt="preview"
-            sx={{ maxWidth: 400, borderRadius: 2, mt: 1 }}
-          />
-        </>
-      )}
+      <Button variant="contained" onClick={() => inputRef.current?.click()}>
+        이미지 업로드
+      </Button>
+      {loading && <LinearProgress sx={{ mt: 2 }} />}
     </Box>
   );
 };

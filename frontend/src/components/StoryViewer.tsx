@@ -1,6 +1,6 @@
 import React from 'react';
 import { Paper, Typography, Box } from '@mui/material';
-
+//story 나타나게.
 interface StoryViewerProps {
   story: string;
 }

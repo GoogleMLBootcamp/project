@@ -69,7 +69,7 @@ export const api = {
     axios.delete(`${API_URL}/v2/images/${storyId}`),
 
   /**
-   * 스토리 생성 (이건 기존 v1 API 사용)
+   * 스토리 생성 (v1 API 사용)
    * POST /api/v1/openai/generate-story
    */
   generateStoryById: async (storyId: string): Promise<string> => {
@@ -80,4 +80,30 @@ export const api = {
     );
     return data.story as string;
   },
+
+  /**
+   * BLIP 이미지 설명 분석
+   * POST /api/v1/blip/analyze
+   */
+  analyzeImageWithBLIP: async (image_url: string): Promise<string> => {
+    const { data } = await axios.post(
+      `${API_URL}/api/v1/blip/analyze`,
+      { image_url },  // 서버에서 image_url이라는 키로 받는다고 가정
+      { headers: { 'Content-Type': 'application/json' } },
+    );
+    return data?.description ?? '';
+  },
+
+  /**
+   * 생성된 스토리를 MongoDB에 저장
+   * PUT /api/v1/stories/{story_id}?story_text=...
+   */
+  saveStoryToDB: async (
+    storyId: string,
+    storyText: string
+  ): Promise<void> => {
+    await axios.put(
+      `${API_URL}/api/v1/stories/${storyId}?story_text=${encodeURIComponent(storyText)}`
+    );
+  }
 };

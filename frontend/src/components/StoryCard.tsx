@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardActionArea, CardMedia, CardContent, Typography } from '@mui/material';
 
+//개별 스토리를 카드 형태로 보여주는 컴포넌트.
+
 interface Props {
   id: string;
   cover: string;

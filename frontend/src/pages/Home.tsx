@@ -7,6 +7,8 @@ import { v4 as uuid } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { useAlbums } from '../albumStore';
 
+//홈 페이지, 앱 첫화면
+
 export default function Home() {
   const { albums, addAlbum } = useAlbums();
   const nav = useNavigate();

@@ -6,6 +6,8 @@ import { api, API_URL } from '../api';
 import { abs } from '../utils/abs';
 import { useAlbums } from '../albumStore';
 
+//앨범 전체를 업로드하는 컴포넌트(여러 이미지 업로드용.)
+
 export default function AlbumUploader() {
   const { addAlbum } = useAlbums();
   const fileRef = useRef<HTMLInputElement>(null);

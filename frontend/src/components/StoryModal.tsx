@@ -13,6 +13,8 @@ import { api } from '../api';
 import { abs } from '../utils/abs';
 import { useAlbums } from '../albumStore';
 
+//스토리 상세 내용 확인, 팝업을 위한 모달 창.
+
 interface Props {
   open: boolean;
   storyId: string | null;
