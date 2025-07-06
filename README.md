@@ -1,6 +1,7 @@
 # GoogleML Project
 
 AI-powered story generation and image creation project using OpenAI and other models.
+https://www.notion.so/Google-ML-Project-21b8730df042801c9977f8654cf32c48
 
 ## Project Structure
 
